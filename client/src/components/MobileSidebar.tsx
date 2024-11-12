@@ -3,7 +3,7 @@ import { FaTasks, FaUsers, FaTrashAlt } from "react-icons/fa";
 import { LuListTodo } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { useDispatch, UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setOpenSidebar } from "../redux/slices/authSlice";
 
 type linkDataProps = {
@@ -61,7 +61,7 @@ export const MobileSidebar = () => {
 
 
   return (
-    <div className="absolute top-0 left-0 w-2/5 h-full bg-gray-800 text-white z-10 p-4 space-y-6">
+    <div className="fixed top-0 left-0 w-2/5 h-full bg-gray-800 text-white z-10 p-4 space-y-6">
     <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold flex items-center">
             <MdOutlineAddTask className="inline-block mr-2" /> TaskMate

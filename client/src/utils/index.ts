@@ -6,3 +6,9 @@ function getInitials(fullname:string) {
 }
 
 export default getInitials;
+
+export const TASK_TYPE = {
+  todo: "bg-blue-600",
+  "in progress": "bg-yellow-600",
+  completed: "bg-green-600",
+};
