@@ -51,7 +51,7 @@ const linkData:linkDataProps[] = [
 
 export const Sidebar = () => {
 
-    const {user,isSidebarOpen} = useSelector((state:any) => state.auth);
+    const {user} = useSelector((state:any) => state.auth);
 
     const dispatch = useDispatch();
     const location = useLocation();
@@ -62,7 +62,7 @@ export const Sidebar = () => {
 
 
   return (
-        <div className="hidden md:flex md:flex-col md:justify-between w-1/5 bg-gray-800 text-white h-screen">
+        <div className="hidden md:flex md:flex-col md:justify-between fixed top-0 left-0 w-60 bg-gray-800 text-white h-full">
         <div className="p-4 space-y-6">
         <h2 className="text-2xl font-bold"> <MdOutlineAddTask className="inline-block" /> TaskMate</h2>
         <ul className="space-y-4">
