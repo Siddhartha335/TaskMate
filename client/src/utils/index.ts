@@ -7,8 +7,22 @@ function getInitials(fullname:string) {
 
 export default getInitials;
 
-export const TASK_TYPE = {
-  todo: "bg-blue-600",
-  "in progress": "bg-yellow-600",
-  completed: "bg-green-600",
+export const TASK_TYPE:any = {
+  todo: "bg-orange-600",
+  "in progress": "bg-blue-600",
+  completed: "bg-pink-600",
 };
+
+export const PRIOTITYSTYELS:any = {
+  high: "text-red-600",
+  medium: "text-yellow-600",
+  low: "text-blue-600",
+};
+
+export const BGS:any = [
+  "bg-orange-500",
+  "bg-purple-500",
+  "bg-pink-500",
+  "bg-teal-500",
+];
+

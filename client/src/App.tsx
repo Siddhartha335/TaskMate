@@ -24,7 +24,7 @@ function Layout() {
       {isSidebarOpen && <MobileSidebar />}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col ml-0 md:ml-60">
+      <div className="flex-1 flex flex-col ml-0 lg:ml-60">
         
         {/* Navbar */}
         <Navbar />

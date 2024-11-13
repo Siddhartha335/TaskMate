@@ -1,7 +1,7 @@
 import { summary } from "../assets/data";
 import moment from "moment"; // for formatting the date
 import clsx from "clsx";
-import getInitials, { TASK_TYPE } from "../utils";
+import getInitials, { BGS, TASK_TYPE } from "../utils";
 
 export const TaskTable = () => {
 
@@ -24,12 +24,12 @@ export const TaskTable = () => {
                 <td className="px-4 py-2 flex items-center gap-[6px]"><div className={clsx("w-4 h-4 rounded-full",TASK_TYPE[task.stage as keyof typeof TASK_TYPE])}></div>{task.title}</td>
                 
                 <td className="px-4 py-2">
-                  {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                  {task.priority.slice(0,1).toUpperCase() + task.priority.slice(1)}
                 </td>
                 
                 <td className="px-4 py-2">
-                  {task.team.map((member) => (
-                    <button key={member._id} className="rounded-full border border-gray-300 p-2 bg-gray-800 text-white w-8 h-8 inline text-[10px] font-bold">
+                  {task.team.map((member,index) => (
+                    <button key={member._id} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
                       {getInitials(member.name)}
                     </button>
                   ))}
