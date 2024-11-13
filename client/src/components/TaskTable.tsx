@@ -29,7 +29,7 @@ export const TaskTable = () => {
                 
                 <td className="px-4 py-2">
                   {task.team.map((member,index) => (
-                    <button key={member._id} className={clsx("w-7 h-7 rounded-full text-white text-sm mr-1 mb-1",BGS[index % BGS?.length])}>
+                    <button key={member._id} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
                       {getInitials(member.name)}
                     </button>
                   ))}

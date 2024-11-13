@@ -1,4 +1,4 @@
-import { TabList, TabGroup, Tab, TabPanel } from "@headlessui/react"
+import { TabList, TabGroup, Tab, TabPanels } from "@headlessui/react"
 import clsx from "clsx"
 
 interface TabsProps {
@@ -26,9 +26,9 @@ export const Tabs = ({tabs,setSelected,children}:TabsProps) => {
                         </Tab>
                 ))}
             </TabList>
-            <TabPanel className="w-full mt-2">
+            <TabPanels className="w-full mt-2">
                 {children}
-            </TabPanel>
+            </TabPanels>
         </TabGroup>
     </div>
   )

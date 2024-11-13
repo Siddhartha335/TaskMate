@@ -30,7 +30,7 @@ export const Tasks = () => {
 
   const {status} = useParams();
 
-  const [selected,setSelected] = useState(0); //for changing board view and list view (tabs)
+  const [selected,setSelected] = useState(1); //for changing board view and list view (tabs)
   const [open,setOpen] = useState(false);
   const [loading,setLoading] = useState(false); //for loader
   console.log(selected)
@@ -63,7 +63,7 @@ export const Tasks = () => {
                 </div>
               )}
               
-              {selected == 0 ? ( <BoardView tasks={tasks} /> ):( <ListView /> )}
+              {selected == 0 ? ( <BoardView tasks={tasks} /> ):( <ListView tasks={tasks} /> )}
 
             </Tabs>
           </div>
