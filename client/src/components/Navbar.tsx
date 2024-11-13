@@ -38,7 +38,7 @@ export const Navbar = () => {
     return (
         <div className="flex justify-between items-center bg-white text-black p-4 shadow-md">
           {/* Left: Search Bar */}
-          <button className="md:hidden text-black" onClick={toggleSidebar}>
+          <button className="lg:hidden text-black" onClick={toggleSidebar}>
             <FaBars className="text-xl" />
           </button>
           <div className="flex items-center space-x-2 w-1/2 md:w-2/5 border border-gray-300 rounded-2xl">

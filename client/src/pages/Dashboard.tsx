@@ -1,6 +1,6 @@
 import { summary } from "../assets/data"
 import { MdAdminPanelSettings } from "react-icons/md";
-import { FaNewspaper,FaUsers } from "react-icons/fa";
+import { FaNewspaper } from "react-icons/fa";
 import { LuClipboardEdit } from "react-icons/lu";
 import { FaArrowsToDot } from "react-icons/fa6";
 import { Card } from "../components/Card";
@@ -53,7 +53,7 @@ export const Dashboard = () => {
     <>
         <Card stats={stats} />
         <Chart />
-        <div className="w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8">
+        <div className="w-full flex flex-col lg:flex-row gap-4 2xl:gap-10 py-8">
           {/* left side table */}
           <div className="flex-1">
             <TaskTable />
