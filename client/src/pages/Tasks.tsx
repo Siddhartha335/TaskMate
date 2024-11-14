@@ -1,4 +1,4 @@
-import { Loader } from "./Loader"
+import { Loader } from "../components/Loader"
 import { MdGridView } from "react-icons/md";
 import { FaList } from "react-icons/fa6";
 import { TASK_TYPE } from "../utils";
@@ -30,7 +30,7 @@ export const Tasks = () => {
 
   const {status} = useParams();
 
-  const [selected,setSelected] = useState(1); //for changing board view and list view (tabs)
+  const [selected,setSelected] = useState(0); //for changing board view and list view (tabs)
   const [open,setOpen] = useState(false);
   const [loading,setLoading] = useState(false); //for loader
   console.log(selected)

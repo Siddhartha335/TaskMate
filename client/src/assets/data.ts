@@ -535,7 +535,7 @@ export const summary = {
         name: "Emily Wilson",
         title: "Data Analyst",
         role: "Analyst",
-        isActive: true,
+        isActive: false,
         createdAt: "2024-11-07T05:38:50.816Z",
       },
       {
@@ -551,7 +551,7 @@ export const summary = {
         name: "Jane Smith",
         title: "Product Manager",
         role: "Manager",
-        isActive: true,
+        isActive: false,
         createdAt: "2024-11-07T04:48:22.519Z",
       },
       {
