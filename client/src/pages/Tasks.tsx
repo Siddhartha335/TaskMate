@@ -10,6 +10,7 @@ import { TaskTitle } from "../components/Tasks/TaskTitle";
 import { BoardView } from "../components/BoardView";
 import { ListView } from "../components/ListView";
 import { tasks } from "../assets/data";
+import { Addtask } from "../components/Tasks/Addtask";
 
 const TABS:{
     title:string,
@@ -33,7 +34,6 @@ export const Tasks = () => {
   const [selected,setSelected] = useState(0); //for changing board view and list view (tabs)
   const [open,setOpen] = useState(false);
   const [loading,setLoading] = useState(false); //for loader
-  console.log(selected)
 
   return (
     <>
@@ -46,7 +46,8 @@ export const Tasks = () => {
               </div>
               {!status && (
                 <div>
-                  <button className="py-2 px-4 text-white bg-blue-700 shadow-lg hover:bg-gray-800 border rounded-lg">
+                  <button className="py-2 px-4 text-white bg-blue-700 shadow-lg hover:bg-gray-800 border rounded-lg"
+                    onClick={() => setOpen(true)}>
                     + Create Task
                   </button>
                 </div>
@@ -67,6 +68,8 @@ export const Tasks = () => {
 
             </Tabs>
           </div>
+
+          <Addtask open={open} setOpen={setOpen} />
 
       </div>
       }

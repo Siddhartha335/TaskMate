@@ -3,11 +3,12 @@ import { useState } from "react"
 import { MdAttachFile, MdKeyboardArrowDown,MdKeyboardArrowUp,MdKeyboardDoubleArrowUp } from "react-icons/md"
 import { useSelector } from "react-redux"
 import getInitials, { BGS, PRIOTITYSTYELS, TASK_TYPE } from "../../utils"
-import { TaskDialog } from "./TaskDialog"
+import TaskDialog from "./TaskDialog"
 import moment from "moment"
 import { BiMessageAltDetail } from "react-icons/bi"
 import { FaList } from "react-icons/fa"
 import { IoMdAdd } from "react-icons/io"
+import AddSubTask from "./AddSubTask"
 
 
 const ICONS:any = {
@@ -81,11 +82,14 @@ export const TaskCard = ({tasks}:any) => {
                 )}
 
                 <div className="w-full pb-2">
-                    <button disabled={user.isAdmin ? false : true} className="w-full flex gap-4 text-gray-500 items-center font-semibold disabled:cursor-not-allowed disabled::text-gray-400">
+                    <button disabled={user.isAdmin ? false : true} className="w-full flex gap-4 text-gray-500 items-center font-semibold disabled:cursor-not-allowed disabled::text-gray-400"
+                    onClick={()=> setOpen(true)}>
                         <IoMdAdd className="text-lg text-black" />
                         <span >Add Subtask</span>
                     </button>
                 </div>
+
+                <AddSubTask open={open} setOpen={setOpen} id={tasks?._id} />
 
             </div>
     </>

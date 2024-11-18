@@ -3,6 +3,8 @@ import moment from "moment"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp, MdDelete, MdOutlineRestore } from "react-icons/md"
 import { tasks } from "../assets/data"
 import { PRIOTITYSTYELS } from "../utils"
+import { useState } from "react"
+import ConfirmatioDialog from "../components/Dialogs"
 
 const ICONS:any = {
   high:<MdKeyboardDoubleArrowUp />,
@@ -11,6 +13,41 @@ const ICONS:any = {
 }
 
 export const Trash = () => {
+
+  const [openDialog,setOpenDialog] = useState(false);
+  const [open,setOpen] = useState(false);
+  const [msg,setMsg] = useState(null as any);
+  const [type,setType] = useState(null as any);
+  const [selected,setSelected] = useState("");
+
+  const restoreAllClick = () => {
+    setType("restoreAll");
+    setMsg("Are you sure you want to restore all tasks ?");
+    setOpenDialog(true);
+  }
+
+  const deleteAllClick = () => {
+    setType("deleteAll");
+    setMsg("Are you sure you want to delete all tasks ?");
+    setOpenDialog(true);
+  }
+
+  const restoreClick = (id:any) => {
+    setType("restore");
+    setMsg("Are you sure you want to restore this task ?");
+    setOpenDialog(true);
+  }
+
+  const deleteClick = (id:any) => {
+    setType("delete");
+    setMsg("Are you sure you want to delete this task ?");
+    setOpenDialog(true);
+  }
+
+  const deleteRestorehandler = () => {
+
+  }
+
   return (
     <>
       <div className="flex items-center justify-between mb-4">
@@ -19,9 +56,9 @@ export const Trash = () => {
           </div>
           <div className="flex items-center gap-4">
             <MdOutlineRestore className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base -mr-3" />
-            <button className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base"> Restore All</button>
+            <button className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={()=> restoreAllClick()}> Restore All</button>
             <MdDelete className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base -mr-3" />
-            <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base">Delete All</button>
+            <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=>deleteAllClick()}>Delete All</button>
           </div>
       </div>
       <div className="overflow-x-auto bg-white p-4 mt-8 rounded-lg shadow-md">
@@ -63,8 +100,8 @@ export const Trash = () => {
                 </td>
 
                 <td className="px-4 py-2">
-                    <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base"><MdOutlineRestore /></button>
-                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base"><MdDelete/></button>
+                    <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={()=> restoreClick(task._id)}><MdOutlineRestore /></button>
+                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=> deleteClick(task._id)}><MdDelete/></button>
                   </td>
 
               </tr>
@@ -72,6 +109,9 @@ export const Trash = () => {
           })}
         </tbody>
       </table>
+
+      <ConfirmatioDialog open={openDialog} setOpen={setOpenDialog} msg={msg} setMsg={setMsg} type={type} setType={setType} onClick={()=> deleteRestorehandler()} />    
+
     </div>
     </>
   )
