@@ -6,15 +6,22 @@ import { MdAttachFile } from "react-icons/md";
 import { FaList } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmatioDialog from "./Dialogs";
+import { Addtask } from "./Tasks/Addtask";
 
 export const ListView = ({tasks}:any) => {
 
   const [openDialog,setOpenDialog] = useState(false);
+  const [open,setOpen] = useState(false);
   const [selected,setSelected] = useState(null)
 
-  const deleteClicks = (id) => {
+  const deleteClicks = (id:any) => {
     setSelected(id);
     setOpenDialog(true);
+  };
+
+  const editClicks = (el:any) => {
+    setSelected(el);
+    setOpen(true);
   };
 
   const deletehandler = () => {
@@ -75,8 +82,8 @@ export const ListView = ({tasks}:any) => {
                       </td>
 
                       <td className="px-4 py-2">
-                        <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base">Edit</button>
-                        <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={deleteClicks}>Delete</button>
+                        <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={() => editClicks(task)}>Edit</button>
+                        <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={() => deleteClicks(task._id)}>Delete</button>
                       </td>
                     </tr>
                   );
@@ -91,6 +98,13 @@ export const ListView = ({tasks}:any) => {
             onClick={deletehandler}
             msg={"Are you sure you want to delete this task?"}
           />
+
+          <Addtask
+            open={open}
+            setOpen={setOpen}
+            selected={selected}
+          />
+
       </>
 
     )

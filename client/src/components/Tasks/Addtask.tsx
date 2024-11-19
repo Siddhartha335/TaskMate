@@ -2,27 +2,36 @@ import { DialogTitle } from "@headlessui/react"
 import { ModalWrapper } from "../ModalWrapper"
 import { useForm } from "react-hook-form"
 import { BiImages } from "react-icons/bi"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import UserList from "./UserList"
 
 type AddTaskProps = {
     open:boolean,
     setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    selected?:any
 }
 
 const stage:string[] = ['TODO','IN PROGRESS','COMPLETED'];
 const priority:string[] = ['NORMAL','MEDIUM','HIGH'];
-export const Addtask = ({open,setOpen}:AddTaskProps) => {
+export const Addtask = ({open,setOpen,selected}:AddTaskProps) => {
 
-  const {register,handleSubmit,formState:{errors}} = useForm();
+  const {register,handleSubmit,formState:{errors},setValue} = useForm();
   const [uploading,setUploading] = useState(false);
   const [team,setTeam] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (selected) {
+      setValue("title", selected.title);  // Dynamically set the title field
+      setValue("stage", selected.stage);
+      setValue("date", selected.date);
+      setValue("priority", selected.priority);
+    }
+  }, [selected, setValue]);
 
   const submitHandler = (data:any) => {
     setUploading(true); 
     console.log(data)
   }
-  const task= "";
 
   return (
     <ModalWrapper open={open} setOpen={setOpen}>
@@ -31,7 +40,7 @@ export const Addtask = ({open,setOpen}:AddTaskProps) => {
               as="h3"
               className="text-base font-bold leading-6 text-gray-900 mb-4"
             >
-              {task ? "UPDATE TASK" : "ADD TASK"}
+              {selected ? "UPDATE TASK" : "ADD TASK"}
             </DialogTitle>
             <div className="mt-2 flex flex-col gap-4">
               <div>
