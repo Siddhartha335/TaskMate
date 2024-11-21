@@ -5,7 +5,7 @@ import morgan from "morgan";
 import { checkDatabaseConnection } from "./config/index.js";
 const PORT:number = Number(process.env.PORT);
 import { routeNotFound, errorHandler } from "./middlewares/errorMiddlewares.js";
-import userRouter from "./routes/userRoutes.js";
+import routes from "./routes/index.js";
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.use("/api",userRouter)
+app.use("/api",routes)
 
 app.use(routeNotFound);
 app.use(errorHandler);
