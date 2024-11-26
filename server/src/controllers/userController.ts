@@ -5,7 +5,6 @@ import { createJWT } from '../api/user/utils/jwtUtils.js';
 export async function registerUser(req: Request, res: Response) {
   try {
     const user = await createUser(req.body); 
-    res.status(201).json(user);
 
     if (user) {
       user.isAdmin ? createJWT(res, user.id) : null;
@@ -14,7 +13,6 @@ export async function registerUser(req: Request, res: Response) {
     } else {
       return res.status(400).json({ status: false, message: "Invalid credentials" });
     }
-
   } catch (error: any) {
     res.status(400).json({status:false, message: error.message });
   }

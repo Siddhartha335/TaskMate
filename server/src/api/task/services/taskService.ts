@@ -4,6 +4,11 @@ export async function taskCreate(userId:any, data:any) {
 
     const { title, team, stage, date, priority, assets, description } = data;
 
+    const taskDate = date ? new Date(date) : new Date();
+    if (isNaN(taskDate.getTime())) {
+      throw new Error("Invalid date provided");
+    }
+
     let text = "New task has been assigned to you";
     if (team?.length > 1) {
       text = text + ` and ${team?.length - 1} others.`;
@@ -11,28 +16,31 @@ export async function taskCreate(userId:any, data:any) {
 
     text =
       text +
-      ` The task priority is set a ${priority} priority, so check and act accordingly. The task date is ${new Date(
-        date
-      ).toDateString()}. Thank you!!!`;
+      ` The task priority is set a ${priority} priority, so check and act accordingly. The task date is ${taskDate.toDateString()}. Thank you!!!`;
 
     const task = await prisma.task.create({
       data: {
         title,
-        stage: stage.toLowerCase(),
-        date,
+        stage: stage.toUpperCase(),
+        date:taskDate,
         description,
-        priority: priority.toLowerCase(),
-        assets,  
+        priority: priority.toUpperCase(),
+        assets: assets || [],  
         team: {
-            connect: team.map((userId:any) => ({ id: userId }))
+            connect: team.map((user:any) => ({ id: user.id }))
         },
         activities:{
             create:{
                 type:"ASSIGNED",
                 activity : text,
-                by: userId
+                by: {
+                  connect: { id: userId }
+                }
             }
         }
+      },
+      include: {
+        activities: true, // Include activities in the response
       }
     })
 
@@ -41,7 +49,7 @@ export async function taskCreate(userId:any, data:any) {
             text,
             taskId: task.id,
             team: {
-                connect: team.map((userId:any) => ({ id: userId }))
+                connect: team.map((user:any) => ({ id: user.id }))
             }
         }
     })
@@ -272,10 +280,17 @@ export async function deleteTask(id:any) {
 }
 
 export async function restoreTask(id:any,actionType:any) {
+
+  const intId = parseInt(id);
+
+  if (isNaN(intId)) {
+    throw new Error("Invalid task ID");
+  }
+
   if(actionType === "delete") {
     return await prisma.task.delete({
       where:{
-        id:id
+        id:intId
       }
     })
   } else if(actionType === "deleteAll") {
@@ -284,11 +299,11 @@ export async function restoreTask(id:any,actionType:any) {
     });
   } else if(actionType === 'restore') {
     const task = await prisma.task.findUnique({
-      where:{id:id},
+      where:{id:intId},
     })
     if(!task) throw new Error('Task not found');
     return await prisma.task.update({
-      where:{id:id},
+      where:{id:intId},
       data:{isTrashed:false}
     })
   } else if(actionType === 'restoreAll') {
