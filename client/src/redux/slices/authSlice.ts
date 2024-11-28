@@ -1,9 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
+import CryptoJS from "crypto-js"
+
+const secret_key = import.meta.env.VITE_SECRET_KEY
+
+const encryptedDataFromStorage = localStorage.getItem('userInfo');
+let decryptedData = null;
+
+if (encryptedDataFromStorage) {
+    try {
+        const bytes = CryptoJS.AES.decrypt(encryptedDataFromStorage, secret_key);
+        decryptedData = bytes.toString(CryptoJS.enc.Utf8); // Get the decrypted string
+    } catch (error) {
+        console.error("Error decrypting data:", error);
+    }
+}
 
 const initialState = {
-    user:localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')!) : null,
-    token:localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')!) : null,
-
+    user:decryptedData ? JSON.parse(decryptedData) : null,
     isSidebarOpen:false,
 }
 
@@ -12,17 +25,14 @@ const authSlice = createSlice({
     initialState,
     reducers:{
         setCredentials: (state,action)=>{
-            state.user = action.payload.user
-            state.token = action.payload.token
-            localStorage.setItem('userInfo',JSON.stringify(state.user))
-            localStorage.setItem('token',JSON.stringify(state.token))
+            state.user = action.payload
+            const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(state.user),secret_key).toString()
+            localStorage.setItem('userInfo',encryptedData)
         },
 
-        logout: (state,action) => {
+        logout: (state) => {
             state.user = null
-            state.token = null
             localStorage.removeItem('userInfo')
-            localStorage.removeItem('token')
         },
 
         setOpenSidebar: (state,action)=> {

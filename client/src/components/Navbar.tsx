@@ -2,16 +2,19 @@ import { useDispatch, useSelector } from "react-redux"
 import { MdSearch } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { logout,setOpenSidebar } from "../redux/slices/authSlice.ts";
+import { logout, setOpenSidebar } from "../redux/slices/authSlice.ts";
 import { FaBars } from "react-icons/fa";
 import { UserAvatar } from "./UserAvatar.tsx";
 import { Notifications } from "./Notifications.tsx";
+import { useLogoutMutation } from "../redux/slices/api/authApiSlice.ts";
+import { toast } from "sonner";
 
 export const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const [logoutUser] = useLogoutMutation();
 
     const {isSidebarOpen} = useSelector((state:any) => state.auth)
 
@@ -22,9 +25,14 @@ export const Navbar = () => {
         setDropdownOpen(!dropdownOpen);
     };
 
-    const handleLogout = () => {
-        // dispatch(logout());
+    const handleLogout = async() => {
+      try {
+        await logoutUser(undefined).unwrap();
+        dispatch(logout());
         navigate("/login"); // Redirect to login page after logout
+      } catch (error:any) {
+        toast.error("Something went wrong!")
+      }
     };
 
     const handleChangePassword = () => {

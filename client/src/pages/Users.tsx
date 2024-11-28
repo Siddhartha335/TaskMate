@@ -13,15 +13,23 @@ export const Users = () => {
   const [open,setOpen] = useState(false);
   const [openAction,setOpenAction] = useState(false);
   const [selected,setSelected] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const deleteClick = (id) => {
+  const deleteClick = (id:any) => {
     setSelected(id);
-    setOpenDialog(true);
+    setOpenDialog(!openDialog);
   }
 
-  const editClick = (el) => {
+  const editClick = (el:any) => {
     setSelected(el);
-    setOpen(true)
+    setIsEditing(true);
+    setOpen(!open)
+  }
+
+  const addClick = () => {
+    setSelected(null);
+    setIsEditing(false);
+    setOpen(!open);
   }
 
   const userActionHandler = () => {
@@ -38,7 +46,7 @@ export const Users = () => {
               <h2 className={clsx("text-2xl font-semibold capitalize")}>Team Members</h2>
           </div>
           <div>
-            <button className="py-2 px-4 text-white bg-blue-700 shadow-lg hover:bg-gray-800 border rounded-lg" onClick={()=> setOpen(true)}>
+            <button className="py-2 px-4 text-white bg-blue-700 shadow-lg hover:bg-gray-800 border rounded-lg" onClick={addClick}>
               + Add New User
             </button>
           </div> 
@@ -97,6 +105,7 @@ export const Users = () => {
         open={open}
         setOpen={setOpen}
         userData={selected}
+        isEditing={isEditing}
         key={new Date().getTime().toString()}
       />
 
