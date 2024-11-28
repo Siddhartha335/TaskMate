@@ -3,13 +3,16 @@ import { useSelector } from "react-redux";
 import {ModalWrapper} from "./ModalWrapper";
 import { DialogTitle } from "@headlessui/react";
 import { Loader } from "./Loader";
+import { toast } from "sonner";
+import { useRegisterMutation } from "../redux/slices/api/authApiSlice";
 
-const AddUser = ({ open, setOpen, userData }:any) => {
-  let defaultValues = userData ?? {};
+const AddUser = ({ open, setOpen,isEditing, userData }:any) => {
+  let defaultValues = isEditing && userData ? userData : {};
   const {user} = useSelector((state:any) => state.auth);
 
-  const isLoading = false,
-    isUpdating = false;
+  const [addNewUser, {isLoading}] = useRegisterMutation();
+
+  const isUpdating = false;
 
   const {
     register,
@@ -17,18 +20,31 @@ const AddUser = ({ open, setOpen, userData }:any) => {
     formState: { errors },
   } = useForm({ defaultValues });
 
-  const handleOnSubmit = () => {
-    
+  const handleOnSubmit = async (data:any) => {
+    try{
+        if(userData) {
+
+        } else {
+          const result = await addNewUser({
+            ...data,
+            password:data.email,
+          }).unwrap();
+          toast.success("New user added succesfully!")
+        }
+    }catch(err){
+      toast.error("Something went wrong!");
+    }
+    console.log(data);
   };
   return (
     <>
       <ModalWrapper open={open} setOpen={setOpen}>
-        <form onSubmit={handleSubmit(handleOnSubmit)} className=''>
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
           <DialogTitle
             as='h2'
             className='text-base font-bold leading-6 text-gray-900 mb-4'
           >
-            {userData ? "UPDATE PROFILE" : "ADD NEW USER"}
+            {isEditing ? "UPDATE PROFILE" : "ADD NEW USER"}
           </DialogTitle>
           <div className='mt-2 flex flex-col gap-6'>
             <div>
@@ -46,7 +62,7 @@ const AddUser = ({ open, setOpen, userData }:any) => {
               </div>
 
               <div>
-              <label htmlFor="title" className="block text-md font-medium text-gray-700">Task Title</label>
+              <label htmlFor="title" className="block text-md font-medium text-gray-700">Title</label>
               <input
                   type="text"
                   id="title"
@@ -60,17 +76,17 @@ const AddUser = ({ open, setOpen, userData }:any) => {
               </div>
 
               <div>
-              <label htmlFor="emails" className="block text-md font-medium text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-md font-medium text-gray-700">Email</label>
               <input
                   type="email"
-                  id="emails"
+                  id="email"
                   placeholder="Email Address"
-                  {...register("emails",{
+                  {...register("email",{
                     required:"Email address is required",
                   })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"  
                 />
-                {errors.emails && <p className="text-sm text-red-500 mt-1"> {errors.emails.message as string}</p>}
+                {errors.email && <p className="text-sm text-red-500 mt-1"> {errors.email.message as string}</p>}
               </div>
 
               <div>

@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../redux/slices/api/authApiSlice";
+import { toast } from "sonner";
+import { setCredentials } from "../redux/slices/authSlice";
+import { Loader } from "../components/Loader";
 
 type LoginData = {
   email: string;
@@ -10,13 +14,21 @@ type LoginData = {
 export const Login = () => {
 
   const {user} = useSelector((state:any) => state.auth);
-  console.log(user)
   const {register, handleSubmit, formState: {errors}} = useForm<LoginData>();
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const [login, {isLoading}] = useLoginMutation();
+ 
   const submitHandler:SubmitHandler<LoginData> = async(data:any) => {
-    console.log('Submit Handler', data);
+    try {
+      const result = await login(data).unwrap();
+      dispatch(setCredentials(result));
+      navigate("/");
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error?.data?.message || error.message);
+    }
   }
 
   useEffect(()=> {
@@ -69,14 +81,16 @@ export const Login = () => {
                 className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 mb-3"
               />
               {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>}
-              <button className="text-sm font-medium">Forgot password ?</button>
+              <button className="text-sm font-medium text-blue-600">Forgot password ?</button>
             </div>
-            <button
+            {isLoading ? <Loader /> : (
+              <button
               type="submit"
               className="w-full py-2 mt-4 bg-gray-800 text-white rounded-md font-medium hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Log In
             </button>
+            )}
           </form>
 
           <div className="flex items-center my-6">
@@ -95,7 +109,7 @@ export const Login = () => {
               <img src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub Logo" className="w-5 h-5 mr-2" />
               Continue with GitHub
             </button>
-            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-[15px]">
             <img src="https://img.icons8.com/?size=100&id=uLWV5A9vXIPu&format=png&color=000000" alt="Facebook Logo" className="w-5 h-5 mr-2" />
               Continue with Facebook
             </button>
