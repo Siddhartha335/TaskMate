@@ -26,7 +26,7 @@ const authApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 credentials: "include",
             })
-        })
+        }),
     })
 })
 

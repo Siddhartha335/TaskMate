@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { Sidebar } from './components/Sidebar'
 import { Navbar } from './components/Navbar'
 import { MobileSidebar } from './components/MobileSidebar'
+import { GithubSuccessRedirect } from './components/SuccessRedirect'
 
 
 function Layout() {
@@ -58,6 +59,7 @@ function App() {
         </Route>
 
         <Route path='/login' element={<Login />} />
+        <Route path="/login/success" element={<GithubSuccessRedirect />} />
 
       </Routes>
 
