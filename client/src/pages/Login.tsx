@@ -19,6 +19,7 @@ export const Login = () => {
   const dispatch = useDispatch();
 
   const [login, {isLoading}] = useLoginMutation();
+
  
   const submitHandler:SubmitHandler<LoginData> = async(data:any) => {
     try {
@@ -31,9 +32,17 @@ export const Login = () => {
     }
   }
 
+  const githubLoginHandler = async () => {
+    window.location.href = `${import.meta.env.VITE_API_URI}/api/user/github`;
+  }
+
+  const googleLoginHandler = async () => {
+    window.location.href = `${import.meta.env.VITE_API_URI}/api/user/google`;
+  }
+
   useEffect(()=> {
     user ? navigate('/dashboard') : navigate('/login')
-  },[user])
+  },[user,navigate,dispatch])
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center bg-[#f3f4f6]">
@@ -101,11 +110,11 @@ export const Login = () => {
 
           {/* OAuth Buttons */}
           <div className="space-y-3 md:space-y-6 w-3/4 md:w-2/4">
-            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50" onClick={googleLoginHandler}>
             <img src="https://img.icons8.com/?size=100&id=17949&format=png&color=000000" alt="Google Logo" className="w-5 h-5 mr-2" />
               Continue with Google
             </button>
-            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+            <button className="w-full flex items-center justify-evenly py-2 border border-gray-300 rounded-md hover:bg-gray-50" onClick={githubLoginHandler}>
               <img src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub Logo" className="w-5 h-5 mr-2" />
               Continue with GitHub
             </button>
