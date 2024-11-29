@@ -6,8 +6,10 @@ import { checkDatabaseConnection } from "./config/index.js";
 const PORT:number = Number(process.env.PORT);
 import { routeNotFound, errorHandler } from "./middlewares/errorMiddlewares.js";
 import routes from "./routes/index.js";
+import passport from "passport";
 
 const app = express();
+
 
 //Check database connection
 checkDatabaseConnection();
@@ -24,6 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(passport.initialize());
 
 app.use("/api",routes)
 
