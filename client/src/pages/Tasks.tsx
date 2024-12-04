@@ -9,8 +9,9 @@ import { Tabs } from "../components/Tabs";
 import { TaskTitle } from "../components/Tasks/TaskTitle";
 import { BoardView } from "../components/BoardView";
 import { ListView } from "../components/ListView";
-import { tasks } from "../assets/data";
+
 import { Addtask } from "../components/Tasks/Addtask";
+import { useGetAllTasksQuery } from "../redux/slices/api/taskApiSlice";
 
 const TABS:{
     title:string,
@@ -28,16 +29,18 @@ const TABS:{
 ]
 
 export const Tasks = () => {
-
   const {status} = useParams();
-
   const [selected,setSelected] = useState(0); //for changing board view and list view (tabs)
   const [open,setOpen] = useState(false);
-  const [loading,setLoading] = useState(false); //for loader
+
+  const {data, isLoading} = useGetAllTasksQuery({
+    strQuery: status || "",
+    isTrashed: ""
+  });
 
   return (
     <>
-      {loading ? <Loader /> :
+      {isLoading ? <Loader /> :
       <div className="w-full">
 
           <div className="flex items-center justify-between mb-4">
@@ -59,17 +62,17 @@ export const Tasks = () => {
               {!status && (
                 <div className="w-full flex justify-between gap-4 md:gap-x-12 py-4">
                   <TaskTitle label="To Do" className={TASK_TYPE.todo} />
-                  <TaskTitle label="In Progress" className={TASK_TYPE["in progress"]} />
+                  <TaskTitle label="In Progress" className={TASK_TYPE["in-progress"]} />
                   <TaskTitle label="Completed" className={TASK_TYPE.completed} />
                 </div>
               )}
               
-              {selected == 0 ? ( <BoardView tasks={tasks} /> ):( <ListView tasks={tasks} /> )}
+              {selected == 0 ? ( <BoardView tasks={data?.tasks} /> ):( <ListView tasks={data?.tasks} /> )}
 
             </Tabs>
           </div>
 
-          <Addtask open={open} setOpen={setOpen} />
+          <Addtask open={open} setOpen={setOpen}  />
 
       </div>
       }

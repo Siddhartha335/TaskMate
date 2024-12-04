@@ -1,19 +1,25 @@
 import clsx from "clsx"
 import moment from "moment";
-import { summary } from "../assets/data";
 import getInitials, { BGS } from "../utils";
 import { useState } from "react";
 import ConfirmatioDialog from "../components/Dialogs";
 import { UserAction } from "../components/Dialogs";
 import AddUser from "../components/AddUser";
+import { useDeletedUserMutation, useGetTeamListQuery, useUserActionMutation } from "../redux/slices/api/userApiSlice";
+import { Loader } from "../components/Loader";
+import { toast } from "sonner";
 
 export const Users = () => {
 
   const [openDialog,setOpenDialog] = useState(false);
   const [open,setOpen] = useState(false);
   const [openAction,setOpenAction] = useState(false);
-  const [selected,setSelected] = useState(null);
+  const [selected,setSelected] = useState<any>();
   const [isEditing, setIsEditing] = useState(false);
+
+  const {data, isLoading,refetch} = useGetTeamListQuery();
+  const [deleteUser] = useDeletedUserMutation();
+  const [userAction] = useUserActionMutation();
 
   const deleteClick = (id:any) => {
     setSelected(id);
@@ -32,11 +38,42 @@ export const Users = () => {
     setOpen(!open);
   }
 
-  const userActionHandler = () => {
-
+  const userActionHandler = async() => {
+    try {
+      const result = await userAction({
+        isActive: !selected.isActive,
+        id: selected?.id
+      });
+      refetch();
+      toast.success(result.data.message);
+      setSelected(null);
+      setTimeout(() => {
+        setOpenAction(false);
+      },500);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.data?.message || error.message);
+    }
   }
 
-  const deleteHandler = () => {
+  const deleteHandler = async() => {
+    try {
+      const result = await deleteUser(selected);
+      refetch();
+      setSelected(null);
+      setTimeout(() => {
+        setOpenDialog(false);
+      },500);
+      toast.success(result.data.message); 
+    } catch(error: any) {
+      console.log(error);
+      toast.error(error?.data?.message || error.message);
+    }
+  }
+
+  const userStatusClick = async (el:any) => {
+    setSelected(el);
+    setOpenAction(true);
   }
 
   return (
@@ -52,7 +89,8 @@ export const Users = () => {
           </div> 
         </div>
         <div className="overflow-x-auto bg-white p-4 mt-8 rounded-lg shadow-md">
-      <table className="w-full text-left">
+      {isLoading? <Loader /> : (
+        <table className="w-full text-left">
         <thead className="border-b">
           <tr>
             <th className="px-4 py-2">Full Name</th>
@@ -61,12 +99,11 @@ export const Users = () => {
             <th className="px-4 py-2">Created At</th>
           </tr>
         </thead>
-        
 
         <tbody>
-          {summary.users.map((user,index) => {
+          {data?.map((user:any,index:any) => {
             return (
-              <tr key={user._id} className="border-b text-sm">
+              <tr key={index} className="border-b text-sm">
                 <td className="px-4 py-2 font-semibold">
                   <div className="flex flex-row gap-4 items-center">
                       <div className={clsx("w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1",BGS[ index % BGS?.length])} >
@@ -81,9 +118,10 @@ export const Users = () => {
                 <td className="px-4 py-2 font-semibold">{user.role}</td>
 
                 <td className="px-4 py-2">
-                  <span className={user.isActive ? "text-green-500" : "text-red-500"}>
+                  <button className={user.isActive ? "text-green-500" : "text-red-500"}
+                    onClick={()=> userStatusClick(user)}>
                     {user.isActive ? "Active" : "Inactive"}
-                  </span>
+                  </button>
                 </td>
 
                 {/* Created At */}
@@ -93,7 +131,7 @@ export const Users = () => {
 
                 <td className="px-4 py-2">
                     <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={()=> editClick(user)}>Edit</button>
-                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=> deleteClick(user?._id)}>Delete</button>
+                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=> deleteClick(user?.id)}>Delete</button>
                   </td>
 
               </tr>
@@ -101,6 +139,7 @@ export const Users = () => {
           })}
         </tbody>
       </table>
+      )}
       <AddUser
         open={open}
         setOpen={setOpen}
@@ -113,7 +152,6 @@ export const Users = () => {
         open={openDialog}
         setOpen={setOpenDialog}
         onClick={deleteHandler}
-        msg={"Are you sure you want to delete this user?"}
       />
 
       <UserAction

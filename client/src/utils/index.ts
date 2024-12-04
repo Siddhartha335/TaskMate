@@ -9,7 +9,7 @@ export default getInitials;
 
 export const TASK_TYPE:any = {
   todo: "bg-orange-600",
-  "in progress": "bg-blue-600",
+  "in-progress": "bg-blue-600",
   completed: "bg-pink-600",
 };
 

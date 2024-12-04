@@ -1,7 +1,10 @@
 import moment from "moment";
-import { summary } from "../assets/data"; // Assuming this contains the 'users' array
 
-export const UserTable = () => {
+type UserTableProps = {
+  data:any
+}
+
+export const UserTable = ({data}:UserTableProps) => {
   return (
     <div className="overflow-x-auto bg-white p-4 mt-8 rounded-lg shadow-md">
       <table className="w-full text-left">
@@ -15,9 +18,9 @@ export const UserTable = () => {
         
 
         <tbody>
-          {summary.users.map((user) => {
+          {data?.users.map((user:any,index:number) => {
             return (
-              <tr key={user._id} className="border-b text-sm">
+              <tr key={index} className="border-b text-sm">
                 <td className="px-4 py-2 font-semibold">{user.name}</td>
 
                 <td className="px-4 py-2">
