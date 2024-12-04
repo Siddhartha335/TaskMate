@@ -28,11 +28,13 @@ export async function validateUserLogin(email: string, enteredPassword: string) 
 export async function listTeamMembers() {
   const users = await prisma.user.findMany({
     select: {
+      id: true,
       name: true,
       title: true,
       role: true,
       email: true,
       isActive: true,
+      createdAt: true
     }
   })
   return users
@@ -155,22 +157,22 @@ export async function changePassword(userId:any,data:any) {
   }
 }
 
-export async function activateUser(userId:any, data:any) {
+export async function activateUser(userId:number, data:any) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   })
   if(user) {
-    user.isActive = data.isActive
-    return await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: user
-    })
+      data: { isActive: data.isActive }, // Only update isActive field
+    });
+    return updatedUser
   } else {
     throw new Error('User not found');
   }
 }
 
-export async function deleteUser(userId:any) {
+export async function deleteUser(userId:number) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   })

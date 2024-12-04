@@ -73,7 +73,7 @@ export async function getNotificationList(req: Request, res: Response) {
 export async function updateUserProfile(req: Request, res: Response) {
   try {
    const {userId, isAdmin} = (req as any).user;
-   const {id} = req.body;
+   const {id} = (req as any).body;
    const specificId = isAdmin && userId === id ? userId : isAdmin && userId !== id ? id : userId;
    const updatedUser = await updateUser(specificId, req.body);
    res.status(201).json({
@@ -118,7 +118,7 @@ export async function changeUserPassword(req: Request, res: Response) {
 export async function activateUserProfile(req: Request, res: Response) {
   try{
     const {id} = req.params;
-    const activatedUser = await activateUser(id, req.body);
+    const activatedUser = await activateUser(Number(id), req.body);
     res.status(201).json({
       status: true,
       message: `User account has been ${activatedUser.isActive ? "activated" : "disabled"}`,
@@ -132,7 +132,7 @@ export async function activateUserProfile(req: Request, res: Response) {
 export async function deleteUserProfile(req: Request, res: Response) {
   try{
     const {id} = req.params;
-    const deletedUser = await deleteUser(id);
+    const deletedUser = await deleteUser(Number(id));
     res.status(201).json({
       status: true,
       message: "User deleted successfully",

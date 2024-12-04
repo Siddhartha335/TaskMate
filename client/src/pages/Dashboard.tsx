@@ -1,4 +1,3 @@
-import { summary } from "../assets/data"
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FaNewspaper } from "react-icons/fa";
 import { LuClipboardEdit } from "react-icons/lu";
@@ -7,6 +6,8 @@ import { Card } from "../components/Card";
 import {Chart} from "../components/Chart";
 import { TaskTable } from "../components/TaskTable";
 import { UserTable } from "../components/UserTable";
+import { useGetDashboardStatsQuery } from "../redux/slices/api/taskApiSlice";
+import { Loader } from "../components/Loader";
 
 type StatProps={
   _id:string,
@@ -18,32 +19,34 @@ type StatProps={
 
 export const Dashboard = () => {
 
+  const {data, isLoading} = useGetDashboardStatsQuery();
+
   const stats:StatProps[] = [
     {
       _id:"1",
       label:"TOTAL TASK",
-      total: summary.totalTasks,
+      total: data?.totalTasks,
       icon: <FaNewspaper />,
       bg:"bg-[#1d4ed8]"
     },
     {
       _id:"2",
       label:"COMPLETED TASK",
-      total: summary.tasks.completed,
+      total: data?.tasks.COMPLETED ?? 0,
       icon: <MdAdminPanelSettings />,
       bg:"bg-[#0f766e]"
     },
     {
       _id:"3",
       label:"TASK IN PROGRESS",
-      total: summary.tasks["in progress"],
+      total: data?.tasks.IN_PROGRESS,
       icon: <LuClipboardEdit />,
       bg:"bg-[#f59e0b]"
     },
     {
       _id:"4",
       label:"TODOS",
-      total: summary.tasks.todo,
+      total: data?.tasks.TODO,
       icon: <FaArrowsToDot />,
       bg:"bg-[#be185d]"
     }
@@ -51,16 +54,16 @@ export const Dashboard = () => {
 
   return (
     <>
-        <Card stats={stats} />
-        <Chart />
+        {isLoading ? <Loader /> : <Card stats={stats} />}
+        <Chart graphData={data?.graphData} />
         <div className="w-full flex flex-col lg:flex-row gap-4 2xl:gap-10 py-8">
           {/* left side table */}
           <div className="flex-1">
-            <TaskTable />
+            <TaskTable data={data} />
           </div>
           {/* right side table */}
           <div className="flex-shrink-0">
-            <UserTable />
+            <UserTable data={data} />
           </div>
         </div>
     </>

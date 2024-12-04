@@ -63,8 +63,11 @@ export async function dashboardStatistics(req: Request, res: Response) {
 
 export async function getTasks(req: Request, res: Response) {
   try {
-    const {stage, isTrashed} = (req as any).query;
-    const tasks = await selectTasks(stage, isTrashed);
+    let {stage, isTrashed} = (req as any).query;
+    if(stage == "in-progress") {
+      stage = "IN_PROGRESS"
+    }
+    const tasks = await selectTasks(stage.toUpperCase(), isTrashed);
     res.status(200).json({
       status: true,
       tasks

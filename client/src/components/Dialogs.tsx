@@ -8,7 +8,7 @@ export default function ConfirmatioDialog({
   setOpen,
   msg,
   setMsg = (msg) => {},
-  onClick = () => {},
+  onClick,
   type = "delete",
   setType = (type) => {},
 }) {
@@ -45,7 +45,7 @@ export default function ConfirmatioDialog({
                 type === "restore" || type === "restoreAll"
                   ? "bg-yellow-600"
                   : "bg-red-600 hover:bg-red-500"
-              )}>
+              )} onClick={onClick}>
               {type === "restore" ? "Restore" : "Delete"}
             </button>
 
@@ -60,7 +60,7 @@ export default function ConfirmatioDialog({
   );
 }
 
-export function UserAction({ open, setOpen, onClick = () => {} }) {
+export function UserAction({ open, setOpen, onClick }) {
   const closeDialog = () => {
     setOpen(false);
   };

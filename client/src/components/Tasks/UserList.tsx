@@ -1,18 +1,20 @@
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { BsChevronExpand } from "react-icons/bs";
-import { summary } from "../../assets/data";
 import clsx from "clsx";
 import getInitials from "../../utils/index.ts"
 import { MdCheck } from "react-icons/md";
+import { useGetTeamListQuery } from "../../redux/slices/api/userApiSlice.ts";
 
 const UserList = ({ setTeam, team }:any) => {
-  const data = summary.users;
+
+  const {data} = useGetTeamListQuery();
+
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   const handleChange = (el:any) => {
     setSelectedUsers(el);
-    setTeam(el?.map((u:any) => u._id));
+    setTeam(el?.map((u:any) => ({id:u.id})));
   };
   useEffect(() => {
     if (team?.length < 1) {

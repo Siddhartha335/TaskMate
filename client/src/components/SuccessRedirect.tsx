@@ -9,15 +9,13 @@ export const GithubSuccessRedirect = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Get the `user` query parameter from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const userInfo = urlParams.get('user');
 
     if (userInfo) {
       try {
-        // Parse the user info and store it in localStorage (or Redux)
         const user = JSON.parse(decodeURIComponent(userInfo));
-        localStorage.setItem('userInfo', JSON.stringify(user)); // Save user info in localStorage
+        localStorage.setItem('userInfo', JSON.stringify(user)); 
         dispatch(setCredentials(user)); // Optionally store the user in Redux state
 
         // Redirect the user to the dashboard

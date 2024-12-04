@@ -1,18 +1,21 @@
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {ModalWrapper} from "./ModalWrapper";
 import { DialogTitle } from "@headlessui/react";
 import { Loader } from "./Loader";
 import { toast } from "sonner";
 import { useRegisterMutation } from "../redux/slices/api/authApiSlice";
+import { useGetTeamListQuery, useUpdateUserMutation } from "../redux/slices/api/userApiSlice";
+import { setCredentials } from "../redux/slices/authSlice";
 
 const AddUser = ({ open, setOpen,isEditing, userData }:any) => {
   let defaultValues = isEditing && userData ? userData : {};
   const {user} = useSelector((state:any) => state.auth);
+  const dispatch = useDispatch();
 
   const [addNewUser, {isLoading}] = useRegisterMutation();
-
-  const isUpdating = false;
+  const [updateUser,{isLoading:isUpdating}] = useUpdateUserMutation();
+  const {data,refetch} = useGetTeamListQuery();
 
   const {
     register,
@@ -23,18 +26,26 @@ const AddUser = ({ open, setOpen,isEditing, userData }:any) => {
   const handleOnSubmit = async (data:any) => {
     try{
         if(userData) {
-
+          const result = await updateUser({id:userData.id,...data}).unwrap();
+          toast.success(result.message);
+          if(userData.id === user.id) {
+            dispatch(setCredentials({...result.user}));
+          }
+          refetch();
         } else {
-          const result = await addNewUser({
+          await addNewUser({
             ...data,
             password:data.email,
           }).unwrap();
           toast.success("New user added succesfully!")
+          refetch();
         }
+        setTimeout(() => {
+          setOpen(false);
+        }, 500);
     }catch(err){
       toast.error("Something went wrong!");
     }
-    console.log(data);
   };
   return (
     <>

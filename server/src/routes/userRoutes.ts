@@ -38,7 +38,6 @@ router.get("/github/redirect",passport.authenticate("github", { failureRedirect:
         const frontend_url = `${process.env.FRONTEND_URL}/login/success?user=${encodeURIComponent(JSON.stringify(user))}`;
         res.redirect(frontend_url)
       }
-        // res.redirect(`${process.env.FRONTEND_URL}/`)
       } else {
         return res.status(400).json({ status: false, message: "Invalid credentials" });
       }

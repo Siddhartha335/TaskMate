@@ -8,10 +8,13 @@ import { UserAvatar } from "./UserAvatar.tsx";
 import { Notifications } from "./Notifications.tsx";
 import { useLogoutMutation } from "../redux/slices/api/authApiSlice.ts";
 import { toast } from "sonner";
+import ChangePassword from "./ChangePassword.tsx";
 
 export const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [open,setOpen] = useState(false);
+    const [selected,setSelected] = useState<any>();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [logoutUser] = useLogoutMutation();
@@ -36,7 +39,8 @@ export const Navbar = () => {
     };
 
     const handleChangePassword = () => {
-        navigate("/change-password"); // Navigate to a change password page (you'll need to create this route)
+      setSelected(null);
+      setOpen(!open);
     };
 
     const toggleSidebar = () => {
@@ -44,6 +48,7 @@ export const Navbar = () => {
     };
 
     return (
+      <>
         <div className="flex justify-between items-center bg-white text-black p-4 shadow-md">
           {/* Left: Search Bar */}
           <button className="lg:hidden text-black" onClick={toggleSidebar}>
@@ -76,5 +81,12 @@ export const Navbar = () => {
             />
       </div>
     </div>
+    <ChangePassword
+        open={open}
+        setOpen={setOpen}
+        userData={selected}
+        key={new Date().getTime().toString()}
+      />
+  </>
   );
 }

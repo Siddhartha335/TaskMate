@@ -2,7 +2,7 @@ import prisma from "../../../utils/db.js";
 
 export async function taskCreate(userId:any, data:any) {
 
-    const { title, team, stage, date, priority, assets, description } = data;
+    const { title, team, stage, date, priority, assets } = data;
 
     const taskDate = date ? new Date(date) : new Date();
     if (isNaN(taskDate.getTime())) {
@@ -21,10 +21,10 @@ export async function taskCreate(userId:any, data:any) {
     const task = await prisma.task.create({
       data: {
         title,
-        stage: stage.toUpperCase(),
+        stage: stage,
         date:taskDate,
-        description,
-        priority: priority.toUpperCase(),
+        description:"",
+        priority: priority,
         assets: assets || [],  
         team: {
             connect: team.map((user:any) => ({ id: user.id }))
@@ -146,7 +146,7 @@ export async function dashboardStat(userId:any,isAdmin:boolean) {
 
   const users = await prisma.user.findMany({
     where: { isActive: true },
-    select: { name: true, title: true, role: true, isAdmin: true, createdAt: true },
+    select: { name: true, title: true, role: true, isAdmin: true, createdAt: true, isActive: true },
     take: 10,
     orderBy: { id: 'desc' },  // Sort by creation date
   });
@@ -184,7 +184,7 @@ export async function dashboardStat(userId:any,isAdmin:boolean) {
 }
 
 export async function selectTasks(stage:any,isTrashed:false) {
-  
+
   const where = {
     isTrashed: isTrashed ? true : false,
     ...(stage && { stage }),  // Only add stage filter if it's provided

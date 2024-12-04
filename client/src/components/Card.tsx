@@ -24,7 +24,7 @@ export const Card = ({stats}:CardProps) => {
           <div className="mt-4">
             <div className="text-[16px] font-light">{stat.label}</div>
             <div className="text-xl font-bold my-1">{stat.total}</div>
-            <div className="text-[14px] font-light block md:hidden">110 last month</div>
+            <div className="text-[14px] font-light ">110 last month</div>
           </div>
         </div>
       ))}

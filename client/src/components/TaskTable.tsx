@@ -3,7 +3,11 @@ import moment from "moment"; // for formatting the date
 import clsx from "clsx";
 import getInitials, { BGS, TASK_TYPE } from "../utils";
 
-export const TaskTable = () => {
+type TaskTableProps = {
+  data: any
+}
+
+export const TaskTable = ({data}:TaskTableProps) => {
 
   return (
     <div className="overflow-x-auto bg-white p-4 mt-8 rounded-lg shadow-md">      
@@ -18,9 +22,9 @@ export const TaskTable = () => {
         </thead>
         
         <tbody>
-          {summary.last10Task.map((task) => {
+          {data?.last10Tasks.map((task:any) => {
             return (
-              <tr key={task._id} className="border-b text-sm">
+              <tr key={task.id} className="border-b text-sm">
                 <td className="px-4 py-2 flex items-center gap-[6px]"><div className={clsx("w-4 h-4 rounded-full",TASK_TYPE[task.stage as keyof typeof TASK_TYPE])}></div>{task.title}</td>
                 
                 <td className="px-4 py-2">
@@ -28,8 +32,8 @@ export const TaskTable = () => {
                 </td>
                 
                 <td className="px-4 py-2">
-                  {task.team.map((member,index) => (
-                    <button key={member._id} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
+                  {task.team.map((member:any,index:number) => (
+                    <button key={index} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
                       {getInitials(member.name)}
                     </button>
                   ))}

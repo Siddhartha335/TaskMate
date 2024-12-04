@@ -43,9 +43,9 @@ export const ListView = ({tasks}:any) => {
               </thead>
               
               <tbody>
-                {tasks.map((task:any) => {
+                {tasks.map((task:any,index:any) => {
                   return (
-                    <tr key={task._id} className="border-b text-sm">
+                    <tr key={index} className="border-b text-sm">
                       <td className="px-4 py-2 flex items-center gap-[6px]"><div className={clsx("w-4 h-4 rounded-full line-clamp-1",TASK_TYPE[task.stage as keyof typeof TASK_TYPE])}></div>{task.title}</td>
                       
                       <td className="px-4 py-2">
