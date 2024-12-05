@@ -36,16 +36,6 @@ const linkData:linkDataProps[] = [
         label:"To Do",
         link:"todo/todo",
         icon: <LuListTodo />
-    },
-    {
-        label:"Team",
-        link:"team",
-        icon: <FaUsers />
-    },
-    {
-        label:"Trash",
-        link:"trashed",
-        icon: <FaTrashAlt />
     }
 ]
 
@@ -64,15 +54,28 @@ export const Sidebar = () => {
   return (
         <div className="hidden lg:flex lg:flex-col lg:justify-between fixed top-0 left-0 w-60 bg-gray-800 text-white h-full">
         <div className="p-4 space-y-6">
-        <h2 className="text-2xl font-bold"> <MdOutlineAddTask className="inline-block" /> TaskMate</h2>
+        <Link to="/" className="text-2xl font-bold" onClick={window.location.reload}> <MdOutlineAddTask className="inline-block" /> TaskMate</Link>
         <ul className="space-y-4">
             {linkData.map((link,index)=> {
                 return (
                     <li key={index} className={clsx("hover:bg-gray-700 p-2 rounded cursor-pointer text-[15px]", path === link.link.split("/")[0] ? "bg-gray-700" : "")}>
-                    <span className="inline-block text-[15px]">{link.icon}</span>  <Link to={link.link} className="hover:bg-gray-700 p-2 rounded" >{link.label}</Link>
+                    <span className="inline-block text-[15px]">{link.icon}</span>  
+                    <Link to={link.link} className="hover:bg-gray-700 p-2 rounded" >{link.label}</Link>
                     </li>
                 )
             })}
+            {user.isAdmin && 
+                <li className={clsx("hover:bg-gray-700 p-2 rounded cursor-pointer text-[15px] ",path === "team".split("/")[0] ? "bg-gray-700" : "")}>
+                <span className="inline-block text-[15px]"><FaUsers /></span>  
+                <Link to="team" className="hover:bg-gray-700 p-2 rounded" >Team</Link>
+                </li>
+            }
+            {user.isAdmin &&
+                <li className={clsx("hover:bg-gray-700 p-2 rounded cursor-pointer text-[15px] ",path === "trashed".split("/")[0] ? "bg-gray-700" : "")}>
+                <span className="inline-block text-[15px]"><FaTrashAlt /></span>  
+                <Link to="trashed" className="hover:bg-gray-700 p-2 rounded" >Trash</Link>
+                </li>
+            }
         </ul>
         </div>
         <div className="p-4">

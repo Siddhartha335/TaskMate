@@ -7,12 +7,16 @@ import { FaList } from "react-icons/fa";
 import { useState } from "react";
 import ConfirmatioDialog from "./Dialogs";
 import { Addtask } from "./Tasks/Addtask";
+import { useTrashTaskMutation } from "../redux/slices/api/taskApiSlice";
+import { toast } from "sonner";
 
 export const ListView = ({tasks}:any) => {
 
   const [openDialog,setOpenDialog] = useState(false);
   const [open,setOpen] = useState(false);
   const [selected,setSelected] = useState(null)
+
+  const [deleteTask] = useTrashTaskMutation();
 
   const deleteClicks = (id:any) => {
     setSelected(id);
@@ -24,8 +28,18 @@ export const ListView = ({tasks}:any) => {
     setOpen(true);
   };
 
-  const deletehandler = () => {
-    console.log("Deleted")
+  const deletehandler = async() => {
+    try {
+      const result = await deleteTask({id:selected}).unwrap(); 
+      toast.success(result.message);
+      setTimeout(() => {
+        setOpenDialog(false);
+        window.location.reload();
+      },500)
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error?.data?.message || error.message);
+    }
   } 
 
     return (
@@ -54,7 +68,7 @@ export const ListView = ({tasks}:any) => {
                       
                       <td className="px-4 py-2">
                         {task.team.map((member:any,index:any) => (
-                          <button key={member._id} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
+                          <button key={index} className={clsx("w-7 h-7 rounded-full text-white text-sm -mr-1",BGS[index % BGS?.length])}>
                             {getInitials(member.name)}
                           </button>
                         ))}
@@ -83,7 +97,7 @@ export const ListView = ({tasks}:any) => {
 
                       <td className="px-4 py-2">
                         <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={() => editClicks(task)}>Edit</button>
-                        <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={() => deleteClicks(task._id)}>Delete</button>
+                        <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={() => deleteClicks(task.id)}>Delete</button>
                       </td>
                     </tr>
                   );
@@ -102,7 +116,7 @@ export const ListView = ({tasks}:any) => {
           <Addtask
             open={open}
             setOpen={setOpen}
-            selected={selected}
+            task={selected}
           />
 
       </>

@@ -18,6 +18,13 @@ const taskApiSlice = apiSlice.injectEndpoints({
                 credentials: "include",
             }),
         }),
+        getTask: builder.query<any,number>({
+            query: (id) => ({
+                url: `${TASK_URL}/${id}`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),
         createTask: builder.mutation({
             query: (data) => ({
                 url: `${TASK_URL}/create`,
@@ -36,13 +43,43 @@ const taskApiSlice = apiSlice.injectEndpoints({
         }),
         updateTask: builder.mutation({
             query: (data) => ({
-                url: `${TASK_URL}/update/${data.id}}`,
+                url: `${TASK_URL}/update/${data.id}`,
                 method: "PUT",
                 body: data,
+                credentials: "include",
+            }),
+        }),
+        trashTask: builder.mutation({
+            query: ({id})  => ({
+                url: `${TASK_URL}/${id}`,
+                method: "PUT",
+                credentials: "include",
+            }),
+        }),
+        createSubTask: builder.mutation({
+            query: ({data,id}) => ({
+                url: `${TASK_URL}/create-subtask/${id}`,
+                method: "PUT",
+                body: data,
+                credentials: "include",
+            }),
+        }),
+        postTaskActivity: builder.mutation({
+            query: ({data,id}) => ({
+                url: `${TASK_URL}/activity/${id}`,
+                method: "POST",
+                body: data,
+                credentials: "include",
+            }),
+        }),
+        deleteOrRestoreActivity: builder.mutation({
+            query: ({id,actionType}) => ({
+                url: `${TASK_URL}/delete-restore/${id}?actionType=${actionType}`,
+                method: "DELETE", 
                 credentials: "include",
             }),
         })
     }),
 });
 
-export const { useGetDashboardStatsQuery, useGetAllTasksQuery, useCreateTaskMutation, useDuplicateTaskMutation, useUpdateTaskMutation } = taskApiSlice 
+export const { useGetDashboardStatsQuery, useGetAllTasksQuery, useGetTaskQuery ,useCreateTaskMutation, useDuplicateTaskMutation, useUpdateTaskMutation, useTrashTaskMutation, useCreateSubTaskMutation, usePostTaskActivityMutation, useDeleteOrRestoreActivityMutation  } = taskApiSlice 

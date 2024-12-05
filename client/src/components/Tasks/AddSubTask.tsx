@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { ModalWrapper } from "../ModalWrapper";
-import { Dialog, DialogTitle } from "@headlessui/react";
+import { DialogTitle } from "@headlessui/react";
+import { useCreateSubTaskMutation } from "../../redux/slices/api/taskApiSlice";
+import { toast } from "sonner";
 
 const AddSubTask = ({ open, setOpen, id }:any) => {
   const {
@@ -9,19 +11,20 @@ const AddSubTask = ({ open, setOpen, id }:any) => {
     formState: { errors },
   } = useForm();
 
-  // const [addSbTask] = useCreateSubTaskMutation();
+  const [addSubTask] = useCreateSubTaskMutation();
 
-  const handleOnSubmit = async (data) => {
-    // try {
-    //   const res = await addSbTask({ data, id }).unwrap();
-    //   toast.success(res.message);
-    //   setTimeout(() => {
-    //     setOpen(false);
-    //   }, 500);
-    // } catch (err) {
-    //   console.log(err);
-    //   toast.error(err?.data?.message || err.error);
-    // }
+  const handleOnSubmit = async (data:any) => {
+    try {
+      const res = await addSubTask({ data, id }).unwrap();
+      toast.success(res.message);
+      setTimeout(() => {
+        setOpen(false);
+        window.location.reload();
+      }, 500);
+    } catch (err:any) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return (

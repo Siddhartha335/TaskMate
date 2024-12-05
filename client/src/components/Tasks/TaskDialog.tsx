@@ -9,6 +9,8 @@ import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/r
 import  {Addtask}  from "./Addtask";
 import AddSubTask from "./AddSubTask";
 import ConfirmatioDialog from "../Dialogs";
+import { useDuplicateTaskMutation, useTrashTaskMutation } from "../../redux/slices/api/taskApiSlice";
+import { toast } from "sonner";
 
 const TaskDialog = ({ tasks }:any) => {
   const [open, setOpen] = useState(false);
@@ -17,19 +19,45 @@ const TaskDialog = ({ tasks }:any) => {
 
   const navigate = useNavigate();
 
-  const duplicateHandler = () => {};
-  const deleteClicks = () => {
-    console.log("Task deleted!");
-    setOpenDialog(false);
+  const [duplicateTask] = useDuplicateTaskMutation();
+  const [deleteTask] = useTrashTaskMutation();
+
+  const duplicateHandler = async() => {
+    try {
+        const result = await duplicateTask({id:tasks.id}).unwrap();
+        toast.success(result.message); 
+        setTimeout(() => {
+          setOpenDialog(false);
+          window.location.reload();
+        },500)
+    } catch (error:any) { 
+      console.log(error);
+      toast.error(error?.data?.message || error.message);
+    }
   };
-  const deleteHandler = () => {
+  const deleteClicks = () => {
+    setOpenDialog(true);
+  };
+  const deleteHandler = async() => {
+      try {
+        const result = await deleteTask({id:tasks.id}).unwrap(); 
+        toast.success(result.message);
+
+        setTimeout(() => {
+          setOpenDialog(false);
+          window.location.reload();
+        },500)
+      } catch (error:any) {
+        console.log(error);
+        toast.error(error?.data?.message || error.message);
+      }
   };
 
   const items = [
     {
       label: "Open Task",
       icon: <AiTwotoneFolderOpen className='mr-2 h-5 w-5' aria-hidden='true' />,
-      onClick: () => navigate(`/task/${tasks._id}`),
+      onClick: () => navigate(`/task/${tasks.id}`),
     },
     {
       label: "Edit",
@@ -110,6 +138,7 @@ const TaskDialog = ({ tasks }:any) => {
       <Addtask
         open={openEdit}
         setOpen={setOpenEdit}
+        task={tasks}
         key={new Date().getTime()}
       />
 

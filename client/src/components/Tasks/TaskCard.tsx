@@ -22,7 +22,6 @@ export const TaskCard = ({tasks}:any) => {
     const {user} = useSelector((state:any) => state.auth);
     const [open,setOpen] = useState(false);
 
-
   return (
     <>
     <div className="w-full h-fit bg-white shadow-md rounded p-4 ">
@@ -89,7 +88,7 @@ export const TaskCard = ({tasks}:any) => {
                     </button>
                 </div>
 
-                <AddSubTask open={open} setOpen={setOpen} id={tasks?._id} />
+                <AddSubTask open={open} setOpen={setOpen} id={tasks?.id} />
 
             </div>
     </>

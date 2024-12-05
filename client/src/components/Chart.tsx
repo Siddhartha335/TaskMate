@@ -16,7 +16,7 @@ export const Chart = ({graphData}:ChartProps) => {
           <Tooltip />
           <Legend />
           <CartesianGrid strokeDasharray="3 3" />
-          <Bar dataKey="total" fill="#8884d8" barSize={100} />
+          <Bar dataKey="total" fill="#1f2937" barSize={100} />
         </BarChart>
       </ResponsiveContainer>
     </div>

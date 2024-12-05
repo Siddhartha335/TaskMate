@@ -1,4 +1,4 @@
-export const summary = {
+const summary = {
     totalTasks: 10,
     last10Task: [
       {
@@ -570,7 +570,7 @@ export const summary = {
     },
   };
   
-  export const chartData = [
+  const chartData = [
     {
       name: "High",
       total: 2400,
@@ -589,7 +589,7 @@ export const summary = {
     },
   ];
   
-  export const tasks = [
+  const tasks = [
     {
       _id: "65c5f12ab5204a81bde866a9",
       title: "Test task",
@@ -1099,7 +1099,7 @@ export const summary = {
     },
   ];
   
-  export const user = {
+  const user = {
     _id: "662f32ffd1303cc",
     name: "Codewave",
     title: "Administrator",
@@ -1113,7 +1113,7 @@ export const summary = {
     isActive: true,
   };
   
-  export const activitiesData = [
+  const activitiesData = [
     {
       _id: "0",
       type: "started",
