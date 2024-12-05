@@ -115,8 +115,8 @@ export async function taskActivity(id:any,userId:any,data:any) {
     data:{
       type: data.type,
       activity: data.activity,
-      by: userId,
-      taskId: task.id
+      userId: userId,
+      taskId: Number(task.id)
     }
   })
   return newActivity;
@@ -195,7 +195,8 @@ export async function selectTasks(stage:any,isTrashed:false) {
     include: {
       team:{
         select:{name:true,title:true,email:true}
-      }
+      },
+      subTasks: true
     },
     orderBy: { id: 'desc' }, 
   })
@@ -218,7 +219,8 @@ export async function selectTask(id:any) {
             select:{name:true}
           }
         }
-      }
+      },
+      subTasks: true
     }
   })
 
@@ -229,11 +231,15 @@ export async function selectTask(id:any) {
 }
 
 export async function subTaskCreate(id:any,data:any) {
+
+  const formattedDate = new Date(data.date).toISOString();
+  console.log(data);
+
   const newSubTask = await prisma.subTask.create({
     data:{
       title: data.title,
       tag: data.tag,
-      date:new Date(data.date),
+      date:formattedDate,
       task:{
         connect:{
           id:id
@@ -247,18 +253,21 @@ export async function subTaskCreate(id:any,data:any) {
 
 export async function taskUpdate(id:any,data:any) {
 
+  const formattedDate = new Date(data.date).toISOString();
+  console.log(data);
+
   const updatedTask = await prisma.task.update({
     where:{
       id:id
     },
     data:{
       title:data.title,
-      date: new Date(data.date),
-      priority:data.priority.toLowerCase(),
+      date:formattedDate,
+      priority:data.priority,
       assets:data.assets,
-      stage: data.stage.toLowerCase(),
+      stage: data.stage,
       team:{
-        set:data.team.map((userId:any) => ({id:userId}))
+        connect:data.team
       }
     }
   })
@@ -266,7 +275,7 @@ export async function taskUpdate(id:any,data:any) {
   return updatedTask;
 }
 
-export async function deleteTask(id:any) {
+export async function deleteTask(id:number) {
 
   const task = await prisma.task.findUnique({
     where:{id:id}
@@ -281,11 +290,7 @@ export async function deleteTask(id:any) {
 
 export async function restoreTask(id:any,actionType:any) {
 
-  const intId = parseInt(id);
-
-  if (isNaN(intId)) {
-    throw new Error("Invalid task ID");
-  }
+  const intId = parseInt(id, 10);
 
   if(actionType === "delete") {
     return await prisma.task.delete({

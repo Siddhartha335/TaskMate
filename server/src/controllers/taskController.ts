@@ -19,7 +19,7 @@ export async function createTask(req: Request, res: Response) {
 export async function duplicateTask(req: Request, res: Response) {
     try{
       const {id} = req.params
-      await taskDuplicate(id);
+      await taskDuplicate(Number(id));
       res.status(200).json({
         status: true,
         message: "Task duplicated successfully"
@@ -34,7 +34,7 @@ export async function postTaskActivity(req: Request, res: Response) {
     const {id} = req.params;
     const {userId} = (req as any).user;
     const data = req.body;
-    const activity = await taskActivity(id, userId, data);
+    const activity = await taskActivity(Number(id), Number(userId), data);
     res.status(200).json({
       status: true,
       message:'Activity added successfully',
@@ -81,7 +81,7 @@ export async function getTasks(req: Request, res: Response) {
 export async function getTask(req: Request, res: Response) {
   try {   
     const {id}= (req as any).params;
-    const task = await selectTask(id);
+    const task = await selectTask(Number(id));
     res.status(200).json({
       status: true,
       task
@@ -98,7 +98,7 @@ export async function createSubTask(req: Request, res: Response) {
   try {   
     const data = (req as any).body;
     const {id} = req.params;
-    const newSubTask = await subTaskCreate(id, data);
+    const newSubTask = await subTaskCreate(Number(id), data);
     res.status(200).json({
       status:true,
       message: "Subtask created successfully",
@@ -114,7 +114,7 @@ export async function updateTask(req: Request, res: Response) {
   try {   
     const {id} = req.params;
     const data = (req as any).body;
-    const updatedTask = await taskUpdate(id, data);
+    const updatedTask = await taskUpdate(Number(id), data);
     res.status(200).json({
       status:true,
       message: "Task updated successfully",
@@ -129,7 +129,7 @@ export async function updateTask(req: Request, res: Response) {
 export async function trashTask(req: Request, res: Response) {
   try {   
     const {id} = req.params
-    await deleteTask(id);
+    await deleteTask(Number(id));
     res.status(200).json({
       status: true,
       message: `Task trashed successfully.`,
