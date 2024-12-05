@@ -12,7 +12,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "npm build/*.js",
+    "start": "node build/*.js",
     "dev": "tsc-watch --onSuccess \"npm start\" "
   },
   "dependencies": {
