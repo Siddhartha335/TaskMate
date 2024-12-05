@@ -12,8 +12,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node build/*.js",
-    "dev": "tsc-watch --onSuccess \"npm start\" "
+    "start": "node build/index.js",
+    "dev": "tsc-watch --onSuccess \"npm start\" ",
+    "build": "tsc"
   },
   "dependencies": {
     "@prisma/client": "^6.0.1",
