@@ -12,7 +12,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon --env-file .env build/*.js",
+    "start": "npm build/*.js",
     "dev": "tsc-watch --onSuccess \"npm start\" "
   },
   "dependencies": {
