@@ -24,6 +24,8 @@ export const Addtask = ({ open, setOpen, task }: AddTaskProps) => {
   const [team, setTeam] = useState<{}[]>([]);
   const [assets, setAssets] = useState<File[]>([]);
   const [uploadedFileURLs, setUploadedFileURLs] = useState<string[]>([]);
+  
+  console.log(uploadedFileURLs)
 
   useEffect(() => {
     if (task) {

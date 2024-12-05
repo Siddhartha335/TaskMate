@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {ModalWrapper} from "./ModalWrapper";
 import { DialogTitle } from "@headlessui/react";
-import { Loader } from "./Loader";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { useChangePasswordMutation } from "../redux/slices/api/userApiSlice";
@@ -9,8 +8,7 @@ import { useLogoutMutation } from "../redux/slices/api/authApiSlice";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/slices/authSlice";
 
-const ChangePassword = ({ open, setOpen, userData }:any) => {
-  const {user} = useSelector((state:any) => state.auth);
+const ChangePassword = ({ open, setOpen }:any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -126,7 +124,3 @@ const ChangePassword = ({ open, setOpen, userData }:any) => {
 };
 
 export default ChangePassword;
-
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}

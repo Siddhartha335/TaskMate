@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { act, useState } from "react"
+import React, { useState } from "react"
 import {FaBug,FaThumbsUp,FaUser} from "react-icons/fa";
 import { GrInProgress } from "react-icons/gr";
 import { MdOutlineDoneAll, MdOutlineMessage } from "react-icons/md"
@@ -119,7 +119,7 @@ export const Activities = ({activities,id,refetch}:any) => {
                             id={type}
                             className="w-4 h-4"
                             checked={selected === type ? true : false}
-                            onChange={(e) => setselected(type)}
+                            onChange={() => setselected(type)}
                             />                        
                             <label className="text-gray-600" htmlFor={type}>{type}</label>
                         </React.Fragment>

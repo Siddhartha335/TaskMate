@@ -15,7 +15,7 @@ const AddUser = ({ open, setOpen,isEditing, userData }:any) => {
 
   const [addNewUser, {isLoading}] = useRegisterMutation();
   const [updateUser,{isLoading:isUpdating}] = useUpdateUserMutation();
-  const {data,refetch} = useGetTeamListQuery();
+  const {refetch} = useGetTeamListQuery();
 
   const {
     register,

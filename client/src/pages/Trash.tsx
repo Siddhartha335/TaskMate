@@ -17,7 +17,6 @@ const ICONS:any = {
 export const Trash = () => {
 
   const [openDialog,setOpenDialog] = useState(false);
-  const [open,setOpen] = useState(false);
   const [msg,setMsg] = useState(null as any);
   const [type,setType] = useState(null as any);
   const [selected,setSelected] = useState("");

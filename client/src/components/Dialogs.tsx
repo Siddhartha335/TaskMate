@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle } from "@headlessui/react";
+import { DialogTitle } from "@headlessui/react";
 import clsx from "clsx";
 import { FaQuestion } from "react-icons/fa";  
 import {ModalWrapper} from "./ModalWrapper";
@@ -7,11 +7,11 @@ export default function ConfirmatioDialog({
   open,
   setOpen,
   msg,
-  setMsg = (msg) => {},
+  setMsg = () => {},
   onClick,
   type = "delete",
-  setType = (type) => {},
-}) {
+  setType = () => {},
+}:any) {
   const closeDialog = () => {
     setType("delete");
     setMsg(null);
@@ -60,7 +60,7 @@ export default function ConfirmatioDialog({
   );
 }
 
-export function UserAction({ open, setOpen, onClick }) {
+export function UserAction({ open, setOpen, onClick }:any) {
   const closeDialog = () => {
     setOpen(false);
   };

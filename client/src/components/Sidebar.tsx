@@ -2,7 +2,7 @@ import { MdDashboard, MdTaskAlt, MdPendingActions, MdOutlineAddTask, MdSettings 
 import { FaTasks, FaUsers, FaTrashAlt } from "react-icons/fa";
 import { LuListTodo } from "react-icons/lu";
 import { Link,useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import clsx from "clsx";
 
 type linkDataProps = {
@@ -42,13 +42,9 @@ const linkData:linkDataProps[] = [
 export const Sidebar = () => {
 
     const {user} = useSelector((state:any) => state.auth);
-
-    const dispatch = useDispatch();
     const location = useLocation();
 
     const path = location.pathname.split('/')[1];
-
-    const sidebarLinks = user?.isAdmin ? linkData : linkData.slice(0,5);
 
 
   return (

@@ -25,7 +25,7 @@ export const Dashboard = () => {
     {
       _id:"1",
       label:"TOTAL TASK",
-      total: data?.totalTasks,
+      total: data?.totalTasks ?? 0,
       icon: <FaNewspaper />,
       bg:"bg-[#1d4ed8]"
     },
@@ -39,14 +39,14 @@ export const Dashboard = () => {
     {
       _id:"3",
       label:"TASK IN PROGRESS",
-      total: data?.tasks.IN_PROGRESS,
+      total: data?.tasks.IN_PROGRESS ?? 0,
       icon: <LuClipboardEdit />,
       bg:"bg-[#f59e0b]"
     },
     {
       _id:"4",
       label:"TODOS",
-      total: data?.tasks.TODO,
+      total: data?.tasks.TODO ?? 0,
       icon: <FaArrowsToDot />,
       bg:"bg-[#be185d]"
     }
