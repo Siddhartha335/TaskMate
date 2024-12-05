@@ -4,29 +4,22 @@ import {FaTasks} from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp, MdTaskAlt } from "react-icons/md"
 import { RxActivityLog } from "react-icons/rx";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
-import { tasks } from "../assets/data";
 import { Tabs } from "../components/Tabs";
 import getInitials, { PRIOTITYSTYELS, TASK_TYPE } from "../utils";
 import { Activities } from "../components/Activities";
-
-const assets = [
-  "https://images.pexels.com/photos/2418664/pexels-photo-2418664.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/8797307/pexels-photo-8797307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/2534523/pexels-photo-2534523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/804049/pexels-photo-804049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-];
+import { useGetTaskQuery } from "../redux/slices/api/taskApiSlice";
+import { Loader } from "../components/Loader";
 
 const ICONS:any = {
-  high: <MdKeyboardDoubleArrowUp />,
-  medium: <MdKeyboardArrowUp />,
-  low: <MdKeyboardArrowDown />,
+  HIGH: <MdKeyboardDoubleArrowUp />,
+  MEDIUM: <MdKeyboardArrowUp />,
+  LOW: <MdKeyboardArrowDown />,
 };
 
 const bgColor:any = {
-  high: "bg-red-200",
-  medium: "bg-yellow-200",
-  low: "bg-blue-200",
+  HIGH: "bg-red-200",
+  MEDIUM: "bg-yellow-200",
+  LOW: "bg-blue-200",
 };
 
 const TABS = [
@@ -38,7 +31,14 @@ export const TaskDetails = () => {
 
   const {id} = useParams();
   const [selectedTab, setSelectedTab] = useState(0);
-  const task = tasks[3];
+
+  const {data,isLoading,refetch} = useGetTaskQuery(Number(id));
+
+  if(isLoading) {
+    return <Loader />
+  }
+
+  const task = data?.task
 
   return (
     <div className="w-full flex flex-col gap-3 mb-4 overflow-y-hidden">
@@ -68,7 +68,7 @@ export const TaskDetails = () => {
               <div className="flex items-center gap-8 p-4 border-y border-gray-200">
                 <div className="space-x-2">
                   <span className="font-semibold">Assets:</span>
-                  <span>{task?.assets.length}</span>
+                  <span>{task?.assets?.length}</span>
                 </div>
                 <span className="text-gray-500">|</span>
 
@@ -131,14 +131,14 @@ export const TaskDetails = () => {
                   key={index}
                   src={m}
                   alt={task.title}
-                  className="w-full h-28 rounded md:h-36 2xl:h-52 cursor-pointer object-cover transition-all duration-700 hover:scale-105 hover:z-50"
+                  className="w-full h-38 rounded md:h-48 2xl:h-52 cursor-pointer  transition-all duration-700 hover:scale-105 hover:z-50"
                   />
                 ))}
               </div>
             </div>
           </div> 
         </> :
-         <Activities activities={task?.activities} id={id} />
+         <Activities activities={task?.activities} id={id} refetch={refetch} />
          }
       </Tabs>
     </div>

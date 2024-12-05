@@ -7,6 +7,7 @@ import UserList from "./UserList";
 import { supabase } from "../../utils/supabase";
 import { useCreateTaskMutation, useGetAllTasksQuery, useUpdateTaskMutation } from "../../redux/slices/api/taskApiSlice";
 import { toast } from "sonner";
+import moment from "moment";
 
 type AddTaskProps = {
   open: boolean;
@@ -28,7 +29,7 @@ export const Addtask = ({ open, setOpen, task }: AddTaskProps) => {
     if (task) {
       setValue("title", task.title);
       setValue("stage", task.stage);
-      setValue("date", task.date);
+      setValue("date", moment(task.date).format("YYYY-MM-DD"));
       setValue("priority", task.priority);
     }
   }, [task, setValue]);
@@ -142,7 +143,7 @@ export const Addtask = ({ open, setOpen, task }: AddTaskProps) => {
               <input
                 type="date"
                 id="date"
-                placeholder={new Date().toDateString()}
+                placeholder={moment().format("YYYY-MM-DD")}
                 {...register("date", { required: "Date is required" })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />

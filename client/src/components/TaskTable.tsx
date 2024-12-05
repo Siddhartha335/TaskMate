@@ -1,4 +1,3 @@
-import { summary } from "../assets/data";
 import moment from "moment"; // for formatting the date
 import clsx from "clsx";
 import getInitials, { BGS, TASK_TYPE } from "../utils";

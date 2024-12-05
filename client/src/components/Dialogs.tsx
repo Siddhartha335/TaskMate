@@ -46,7 +46,7 @@ export default function ConfirmatioDialog({
                   ? "bg-yellow-600"
                   : "bg-red-600 hover:bg-red-500"
               )} onClick={onClick}>
-              {type === "restore" ? "Restore" : "Delete"}
+              {type === "restoreAll" || type === "restore" ? "Restore" : "Delete"}
             </button>
 
             <button className='bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border'

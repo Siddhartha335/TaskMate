@@ -1,47 +1,39 @@
 import moment from "moment";
-import React, { useState } from "react"
+import React, { act, useState } from "react"
 import {FaBug,FaThumbsUp,FaUser} from "react-icons/fa";
 import { GrInProgress } from "react-icons/gr";
 import { MdOutlineDoneAll, MdOutlineMessage } from "react-icons/md"
 import { Loader } from "./Loader";
-type ActivityProps = {
-    activities:{
-        type:any,
-        activity:any,
-        date:any,
-        by:any,
-        _id:any
-    }[],
-    id:any
-}
+import { usePostTaskActivityMutation } from "../redux/slices/api/taskApiSlice";
+import { toast } from "sonner";
 
 const TASKTYPEICON:any = {
-    commented: (
+    COMMENTED: (
       <div className='w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white'>
         <MdOutlineMessage size={20} />,
       </div>
     ),
-    started: (
+    STARTED: (
       <div className='w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white'>
         <FaThumbsUp size={20} />
       </div>
     ),
-    assigned: (
+    ASSIGNED: (
       <div className='w-6 h-6 flex items-center justify-center rounded-full bg-gray-500 text-white'>
         <FaUser size={14} />
       </div>
     ),
-    bug: (
+    BUG: (
       <div className='text-red-600'>
         <FaBug size={24} />
       </div>
     ),
-    completed: (
+    COMPLETED: (
       <div className='w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white'>
         <MdOutlineDoneAll size={24} />
       </div>
     ),
-    "in progress": (
+    IN_PROGRESS: (
       <div className='w-8 h-8 flex items-center justify-center rounded-full bg-violet-600 text-white'>
         <GrInProgress size={16} />
       </div>
@@ -49,26 +41,47 @@ const TASKTYPEICON:any = {
   };
 
 const act_types:string[] = [
-    "Started",
-    "Completed",
-    "In Progress",
-    "Commented",
-    "Bug",
-    "Assigned",
+    "STARTED",
+    "COMPLETED",
+    "IN_PROGRESS",
+    "COMMENTED",
+    "BUG",
+    "ASSIGNED",
   ];
-export const Activities = ({activities}:ActivityProps) => {
+export const Activities = ({activities,id,refetch}:any) => {
 
     const [selected,setselected] = useState(act_types[0]);
     const [text,setText] = useState('');
-    const isLoading = false
+
+    const [postActivity, {isLoading}] = usePostTaskActivityMutation();
+
+    const handleSubmit = async(e:any) => {
+      e.preventDefault();
+      try {
+        const activityData = {
+          type:selected,
+          activity:text 
+        }
+        const result = await postActivity({
+          data:activityData,
+          id:id
+        }).unwrap();
+        setText('');
+        toast.success(result.message);
+        refetch();
+      } catch (error:any) {
+        console.log(error);
+        toast.error(error?.data?.message || error.message);
+      }
+    }
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-10 2xl:gap-20 min-h-screen px-10 py-8 bg-white shadow rounded-md justify-between overflow-y-auto">
         <div className="w-full md:w-1/2">
             <h4 className="text-gray-600 font-semibold text-lg mb-5">Activities</h4>
             <div className="w-full">
-                {activities.map((activity) => (
-                    <div className=" flex space-x-4" key={activity._id}>
+                {activities.map((activity:any) => (
+                    <div className=" flex space-x-4" key={activity.id}>
                         <div className="flex flex-col items-center flex-shrink-0">
                             <div className="w-10 h-10 flex items-center justify-center">
                                 {TASKTYPEICON[activity.type]}
@@ -95,7 +108,8 @@ export const Activities = ({activities}:ActivityProps) => {
             </div>
         </div>
         {!isLoading ? (
-                <div className="w-full md:w-[40%]">
+                <form onSubmit={handleSubmit}>
+                  <div className="w-full md:w-[90%]">
                 <h4 className="text-gray-600 font-semibold text-lg mb-5">Add Activity</h4>
                 <div className="flex items-center gap-3 flex-wrap">
                     {act_types.map((type) => (
@@ -120,9 +134,10 @@ export const Activities = ({activities}:ActivityProps) => {
                      />
                 </div>
                 <div>
-                <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md mt-5">Submit</button>
+                <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md mt-5" type="submit">Submit</button>
                 </div>
             </div>
+                </form>
         ): (
             <div className="w-full md:w-[40%]">
                 <Loader />

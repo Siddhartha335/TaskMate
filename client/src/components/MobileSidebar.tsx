@@ -63,9 +63,9 @@ export const MobileSidebar = () => {
   return (
     <div className="fixed top-0 left-0 w-2/5 h-full bg-gray-800 text-white z-10 p-4 space-y-6">
     <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center">
+        <Link to="/" className="text-2xl font-bold flex items-center" onClick={window.location.reload}>
             <MdOutlineAddTask className="inline-block mr-2" /> TaskMate
-        </h2>
+        </Link>
         <MdClose className="text-white text-2xl cursor-pointer" onClick={closeSidebar} />
     </div>
     <ul className="space-y-4">

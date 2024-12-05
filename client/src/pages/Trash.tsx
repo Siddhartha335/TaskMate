@@ -1,15 +1,17 @@
 import clsx from "clsx"
 import moment from "moment"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp, MdKeyboardDoubleArrowUp, MdDelete, MdOutlineRestore } from "react-icons/md"
-import { tasks } from "../assets/data"
 import { PRIOTITYSTYELS } from "../utils"
 import { useState } from "react"
 import ConfirmatioDialog from "../components/Dialogs"
+import { useDeleteOrRestoreActivityMutation, useGetAllTasksQuery } from "../redux/slices/api/taskApiSlice"
+import { Loader } from "../components/Loader"
+import { toast } from "sonner"
 
 const ICONS:any = {
-  high:<MdKeyboardDoubleArrowUp />,
-  medium:<MdKeyboardArrowUp />,
-  low:<MdKeyboardArrowDown />
+  HIGH:<MdKeyboardDoubleArrowUp />,
+  MEDIUM:<MdKeyboardArrowUp />,
+  LOW:<MdKeyboardArrowDown />
 }
 
 export const Trash = () => {
@@ -19,6 +21,13 @@ export const Trash = () => {
   const [msg,setMsg] = useState(null as any);
   const [type,setType] = useState(null as any);
   const [selected,setSelected] = useState("");
+
+  const {data, isLoading, refetch} = useGetAllTasksQuery({
+    strQuery:  "",
+    isTrashed: true
+  });
+
+  const [deleteOrRestore] = useDeleteOrRestoreActivityMutation();
 
   const restoreAllClick = () => {
     setType("restoreAll");
@@ -34,18 +43,44 @@ export const Trash = () => {
 
   const restoreClick = (id:any) => {
     setType("restore");
+    setSelected(id);
     setMsg("Are you sure you want to restore this task ?");
     setOpenDialog(true);
   }
 
   const deleteClick = (id:any) => {
     setType("delete");
+    setSelected(id);
     setMsg("Are you sure you want to delete this task ?");
     setOpenDialog(true);
   }
 
-  const deleteRestorehandler = () => {
-
+  const deleteRestorehandler = async() => {
+     try {
+        let result;
+        switch (type) {
+          case "delete":
+            result = await deleteOrRestore({id:selected,actionType:"delete"}).unwrap();
+            break;
+          case "restore":
+            result = await deleteOrRestore({id:selected,actionType:"restore"}).unwrap();
+            break;
+          case "deleteAll":
+            result = await deleteOrRestore({id:"",actionType:"deleteAll"}).unwrap();
+            break;
+          case "restoreAll":
+            result = await deleteOrRestore({id:"",actionType:"restoreAll"}).unwrap();
+            break;
+        }
+        toast.success(result.message);
+        setTimeout(() => {
+          setOpenDialog(false);
+          refetch();
+        },500);
+     } catch (error:any) {
+        console.log(error);
+        toast.error(error.message);
+     }
   }
 
   return (
@@ -62,7 +97,10 @@ export const Trash = () => {
           </div>
       </div>
       <div className="overflow-x-auto bg-white p-4 mt-8 rounded-lg shadow-md">
-      <table className="w-full text-left">
+      {isLoading ? (
+        <Loader /> 
+      ): (
+        <table className="w-full text-left">
         <thead className="border-b">
           <tr>
             <th className="px-4 py-2">Task Title</th>
@@ -73,9 +111,9 @@ export const Trash = () => {
         </thead>
 
         <tbody>
-        {tasks.map((task) => {
+        {data?.tasks?.map((task:any) => {
             return (
-              <tr key={task._id} className="border-b text-sm">
+              <tr key={task.id} className="border-b text-sm">
                 <td className="px-4 py-2 font-semibold">
                   <div className="flex flex-row gap-4 items-center">
                       <div>
@@ -100,8 +138,8 @@ export const Trash = () => {
                 </td>
 
                 <td className="px-4 py-2">
-                    <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={()=> restoreClick(task._id)}><MdOutlineRestore /></button>
-                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=> deleteClick(task._id)}><MdDelete/></button>
+                    <button className="text-blue-600 mr-2 hover:text-blue-500 sm:px-0 text-sm md:text-base" onClick={()=> restoreClick(task.id)}><MdOutlineRestore /></button>
+                    <button className="text-red-600 hover:text-red-500 sm:px-0 text-sm md:text-base" onClick={()=> deleteClick(task.id)}><MdDelete/></button>
                   </td>
 
               </tr>
@@ -109,6 +147,7 @@ export const Trash = () => {
           })}
         </tbody>
       </table>
+      )}
 
       <ConfirmatioDialog open={openDialog} setOpen={setOpenDialog} msg={msg} setMsg={setMsg} type={type} setType={setType} onClick={()=> deleteRestorehandler()} />    
 
