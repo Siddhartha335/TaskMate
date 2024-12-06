@@ -28,6 +28,10 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(passport.initialize());
 
+app.get("/",(req,res)=> {
+    res.send("Welcome to TaskMate Api");
+})
+
 app.use("/api",routes)
 
 app.use(routeNotFound);
