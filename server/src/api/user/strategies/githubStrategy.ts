@@ -18,7 +18,7 @@ passport.use(
     new GitHubStrategy({
         clientID: clientID,
         clientSecret: clientSecret,
-        callbackURL: "http://localhost:8800/api/user/github/redirect",
+        callbackURL: "https://taskmate-gr45.onrender.com/api/user/github/redirect",
         scope: ["user:email"]
     },async (accessToken:any,refreshToken:any,profile:any,done:any)=> {
         try {
